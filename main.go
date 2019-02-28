@@ -7,6 +7,7 @@ import (
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/imdraw"
 	"github.com/faiface/pixel/pixelgl"
+	"github.com/go-vgo/robotgo"
 	"golang.org/x/image/colornames"
 )
 
@@ -31,17 +32,10 @@ func run() {
 	// imd.Push(pixel.V(100, 100))
 	// imd.Rectangle(0)
 	go EvolveBoard()
+	go ListenForSpacebar()
+	// go ListenForMouse(win)
 	for !win.Closed() {
-		if win.JustPressed(pixelgl.KeySpace) {
-			if pause == false {
-				pause = true
-			} else {
-				pause = false
-			}
-
-		}
 		if win.JustPressed(pixelgl.MouseButtonLeft) {
-
 			mousePos := win.MousePosition()
 			x := (mousePos.X) / 16
 			y := (mousePos.Y) / 16
@@ -52,9 +46,8 @@ func run() {
 			} else {
 				board[49-yInt][xInt] = 0
 			}
-
+			time.Sleep(time.Millisecond * 100)
 		}
-
 		win.Clear(colornames.White)
 		// spew.Dump(board)
 		for x := 0; x < 50; x++ {
@@ -79,6 +72,26 @@ func run() {
 
 }
 
+// func ListenForMouse(win *pixelgl.Window) {
+// 	for {
+// 		robotgo.AddEvent("mleft")
+
+// 	}
+
+// }
+
+func ListenForSpacebar() {
+	for {
+		robotgo.AddEvent("space")
+		if pause == false {
+			pause = true
+		} else {
+			pause = false
+		}
+		time.Sleep(time.Millisecond * 200)
+	}
+
+}
 func EvolveBoard() {
 	for {
 		time.Sleep(time.Millisecond * 250)
